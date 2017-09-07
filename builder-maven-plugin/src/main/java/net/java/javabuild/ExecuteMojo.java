@@ -19,22 +19,21 @@ package net.java.javabuild;
  * under the License.
  */
 
+import org.apache.commons.io.FileUtils;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecution;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.*;
+import org.apache.maven.project.MavenProject;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecution;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugins.annotations.InstantiationStrategy;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
-import org.apache.maven.project.MavenProject;
+import static net.java.javabuild.BuilderFolders.getSite;
+import static net.java.javabuild.BuilderFolders.getWebappResources;
 
 @Mojo(name = "execute", defaultPhase = LifecyclePhase.NONE, threadSafe = true, requiresDependencyResolution = ResolutionScope.TEST, instantiationStrategy = InstantiationStrategy.KEEP_ALIVE)
 public class ExecuteMojo extends AbstractMojo {
@@ -70,6 +69,9 @@ public class ExecuteMojo extends AbstractMojo {
 	private ClassLoader classLoader;
 
 	public void execute() throws MojoExecutionException {
+		// set the current directory since it's used by BuilderFolders class
+		System.setProperty("user.dir", project.getBasedir().getAbsolutePath());
+
 		currentPhase = Phase.fromString(mojoExecution.getLifecyclePhase());
 		getLog().info("Phase: " + currentPhase.toString());
 		if (buildPlan == null) {
@@ -101,13 +103,13 @@ public class ExecuteMojo extends AbstractMojo {
 	}
 
 	private void afterPreparePackage() throws IOException {
-		File webappResources = new File(BuilderFolders.WEBAPP_RESOURCES);
+		File webappResources = new File(getWebappResources());
 		if (webappResources.exists())
 			FileUtils.copyDirectory(webappResources, webappDirectory);
 	}
 
 	private void afterPreSite() throws IOException {
-		File site = new File(BuilderFolders.SITE);
+		File site = new File(getSite());
 		if (site.exists())
 			FileUtils.copyDirectory(site, new File(generatedSiteDirectory, "resources/"));
 	}

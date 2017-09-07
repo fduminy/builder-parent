@@ -35,8 +35,8 @@ public class DatabaseStarter {
 		LOGGER.info("Database started");
 		Class.forName("org.h2.Driver");
 		Connection conn = DriverManager.getConnection(
-				"jdbc:h2:tcp://localhost/~/test", "sa", "");
-		File file = new File(BuilderFolders.getTestResources(), "create_test_database.sql");
+				"jdbc:h2:tcp://localhost/~/testModule1", "sa", "");
+		File file = new File(BuilderFolders.getTestResources(), "create_test_database_module1.sql");
 		List<String> sqls = FileUtils.readLines(file);
 		for (Iterator<String> iterator = sqls.iterator(); iterator.hasNext();) {
 			String sql = iterator.next();
