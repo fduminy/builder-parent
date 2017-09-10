@@ -4,7 +4,7 @@
     <groupId>net.java.javabuild</groupId>
     <artifactId>builder-maven-plugin-test-multimodule-module1</artifactId>
     <version>1.0</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
@@ -83,4 +83,15 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>local.repo</id>
+            <url>file:${project.basedir}/target/builder/local-deployment</url>
+        </repository>
+        <site>
+            <id>local.site</id>
+            <url>file:${project.basedir}/target/builder/local-site</url>
+        </site>
+    </distributionManagement>
 </project>

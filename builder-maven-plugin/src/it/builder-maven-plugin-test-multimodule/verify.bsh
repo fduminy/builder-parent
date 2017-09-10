@@ -1,0 +1,14 @@
+import java.io.*;
+import java.nio.file.*;
+import net.java.javabuild.*;
+import org.assertj.core.api.*;
+import org.assertj.core.util.Strings;
+import java.util.*;
+
+
+SortedSet phases = new TreeSet(Arrays.asList(Phase.values()));
+String expectedContent = Strings.join(phases).with(System.getProperty("line.separator"));
+
+File phasesFile = new File(basedir, "module1/target/builder/Phases.txt");
+Assertions.assertThat(phasesFile).isFile().hasContent(expectedContent);
+return true;
